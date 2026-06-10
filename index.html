@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16204A">
+<title>Kọ́ Yorùbá — learn Yoruba</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Schibsted+Grotesk:wght@400;500;600&family=Noto+Serif:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --indigo-950:#10183A; --indigo-900:#16204A; --indigo-800:#1F2D5C;
+  --indigo-600:#34488C; --indigo-200:#C8D1EC; --indigo-100:#E4E9F6; --indigo-50:#F0F3FA;
+  --gold:#D9A441; --gold-deep:#A8761F; --gold-soft:#F6E8CB;
+  --paper:#F6F4EE; --card:#FFFFFF; --ink:#1B2138; --ink-soft:#5A6075; --ink-faint:#9AA0B3;
+  --line:#E3E1D8; --green:#2E7D4F; --green-soft:#E3F0E7; --clay:#BC4B32; --clay-soft:#F7E5E0;
+  --r-md:12px; --r-lg:18px;
+  --sans:"Schibsted Grotesk",system-ui,sans-serif;
+  --serif:"Fraunces","Noto Serif",Georgia,serif;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--paper)}
+body{font-family:var(--sans);color:var(--ink);touch-action:manipulation;
+  -webkit-font-smoothing:antialiased;min-height:100dvh}
+#app{max-width:430px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+
+.hero{background:var(--indigo-900);color:#fff;padding:calc(20px + env(safe-area-inset-top)) 20px 22px;
+  position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cg fill='none' stroke='%233A4E96' stroke-width='1.4'%3E%3Ccircle cx='14' cy='14' r='5'/%3E%3Ccircle cx='42' cy='42' r='5'/%3E%3Ccircle cx='14' cy='14' r='10'/%3E%3Ccircle cx='42' cy='42' r='10'/%3E%3C/g%3E%3Cg fill='%233A4E96'%3E%3Ccircle cx='42' cy='14' r='1.6'/%3E%3Ccircle cx='14' cy='42' r='1.6'/%3E%3C/g%3E%3C/svg%3E")}
+.hero *{position:relative;z-index:1}
+.hero .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 4px;font-weight:600}
+.hero h1{font-family:var(--serif);font-weight:500;font-size:30px;margin:0;line-height:1.15}
+.hero .sub{font-size:14px;color:var(--indigo-200);margin:6px 0 0}
+.statrow{display:flex;gap:10px;margin-top:16px}
+.stat{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--r-md);padding:10px 12px}
+.stat .n{font-family:var(--serif);font-size:22px;font-weight:600;color:#fff}
+.stat .l{font-size:11px;color:var(--indigo-200);margin-top:1px}
+
+.main{flex:1;padding:18px 16px calc(28px + env(safe-area-inset-bottom))}
+.section-label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-faint);font-weight:600;margin:6px 4px 10px}
+
+.round{width:100%;text-align:left;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:14px 16px;margin-bottom:10px;cursor:pointer;
+  font-family:var(--sans);color:var(--ink);display:block;transition:transform .06s}
+.round:active{transform:scale(.985)}
+.round.locked{background:transparent;border-style:dashed;opacity:.62;cursor:default}
+.round .top{display:flex;align-items:center;gap:12px}
+.round .num{font-family:var(--serif);font-size:15px;font-weight:600;width:38px;height:38px;
+  border-radius:10px;background:var(--indigo-100);color:var(--indigo-800);
+  display:flex;align-items:center;justify-content:center;flex:none}
+.round.locked .num{background:transparent;border:1px dashed var(--ink-faint);color:var(--ink-faint)}
+.round .t{font-size:15px;font-weight:600;margin:0}
+.round .d{font-size:12px;color:var(--ink-soft);margin:1px 0 0}
+.round .badge{margin-left:auto;font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;flex:none}
+.badge.done{background:var(--green-soft);color:var(--green)}
+.badge.now{background:var(--gold-soft);color:var(--gold-deep)}
+.badge.lock{color:var(--ink-faint)}
+
+.weave{display:flex;gap:4px;margin-top:12px;height:7px}
+.weave i{flex:1;border-radius:3px;background:var(--indigo-50);position:relative;overflow:hidden}
+.weave i b{position:absolute;left:0;top:0;bottom:0;background:var(--gold);border-radius:3px}
+.weave i.full b{background:var(--indigo-600)}
+.weave-key{display:flex;gap:12px;margin-top:7px;font-size:11px;color:var(--ink-faint)}
+
+.mix{width:100%;background:var(--indigo-800);color:#fff;border:none;border-radius:var(--r-lg);
+  padding:15px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-top:14px;
+  font-family:var(--sans);text-align:left;transition:transform .06s}
+.mix:active{transform:scale(.985)}
+.mix .t{font-size:15px;font-weight:600;margin:0}
+.mix .d{font-size:12px;color:var(--indigo-200);margin:1px 0 0}
+.mix svg{margin-left:auto;flex:none}
+.mix:disabled{opacity:.45;cursor:default}
+
+.topbar{display:flex;align-items:center;gap:8px;padding:calc(12px + env(safe-area-inset-top)) 12px 12px}
+.back{border:none;background:transparent;padding:10px;cursor:pointer;border-radius:10px;color:var(--ink);display:flex}
+.back:active{background:var(--indigo-50)}
+.topbar .where{font-size:13px;color:var(--ink-soft);font-weight:500}
+
+.roundhead{padding:4px 20px 18px}
+.roundhead h2{font-family:var(--serif);font-weight:500;font-size:26px;margin:0}
+.roundhead p{font-size:13px;color:var(--ink-soft);margin:5px 0 0}
+
+.mode{width:100%;text-align:left;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:16px;margin-bottom:10px;cursor:pointer;font-family:var(--sans);
+  color:var(--ink);display:flex;align-items:center;gap:14px;transition:transform .06s}
+.mode:active{transform:scale(.985)}
+.mode .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none}
+.mode .ic.fc{background:var(--indigo-100);color:var(--indigo-800)}
+.mode .ic.ch{background:var(--gold-soft);color:var(--gold-deep)}
+.mode .ic.bd{background:var(--green-soft);color:var(--green)}
+.mode .t{font-size:15px;font-weight:600;margin:0}
+.mode .d{font-size:12px;color:var(--ink-soft);margin:2px 0 0}
+.mode .pct{margin-left:auto;font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink-soft);flex:none}
+
+.session{flex:1;display:flex;flex-direction:column;padding:0 16px calc(16px + env(safe-area-inset-bottom))}
+.prog{height:6px;background:var(--indigo-50);border-radius:3px;margin:4px 4px 6px;overflow:hidden}
+.prog b{display:block;height:100%;background:var(--gold);border-radius:3px;transition:width .25s}
+.count{font-size:12px;color:var(--ink-faint);text-align:right;margin:0 6px 12px}
+
+.fcard{flex:1;min-height:300px;perspective:1100px;cursor:pointer;margin-bottom:14px}
+.fcard .in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .45s}
+.fcard.flip .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:var(--card);border:1px solid var(--line);border-radius:22px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px;text-align:center}
+.face.b{transform:rotateY(180deg);background:var(--indigo-900);border-color:var(--indigo-900);color:#fff}
+.tag{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;color:var(--gold-deep);margin-bottom:14px}
+.face.b .tag{color:var(--gold)}
+.yo-word{font-family:var(--serif);font-size:40px;font-weight:500;line-height:1.15;margin:0}
+.yo-simple{font-size:14px;color:var(--ink-soft);margin:8px 0 0}
+.yo-pron{font-size:14px;color:var(--ink-faint);margin:4px 0 0;font-style:italic}
+.en-word{font-family:var(--serif);font-size:30px;font-weight:500;margin:0}
+.ex{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.18);max-width:280px}
+.ex .y{font-size:16px;margin:0;color:var(--gold-soft)}
+.ex .e{font-size:13px;color:var(--indigo-200);margin:5px 0 0}
+.hint{font-size:12px;color:var(--ink-faint);margin-top:18px}
+.face.b .hint{color:var(--indigo-200)}
+
+.actions{display:flex;gap:10px}
+.btn{flex:1;min-height:52px;border-radius:var(--r-lg);border:1px solid var(--line);
+  background:var(--card);font-family:var(--sans);font-size:15px;font-weight:600;color:var(--ink);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .06s;padding:10px}
+.btn:active{transform:scale(.97)}
+.btn.miss{background:var(--clay-soft);border-color:var(--clay-soft);color:var(--clay)}
+.btn.got{background:var(--green-soft);border-color:var(--green-soft);color:var(--green)}
+.btn.primary{background:var(--indigo-800);border-color:var(--indigo-800);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+
+.q-en{font-size:14px;color:var(--ink-soft);margin:6px 4px 8px}
+.q-yo{font-family:var(--serif);font-size:24px;line-height:1.45;margin:0 4px 22px}
+.blank{display:inline-block;min-width:84px;border-bottom:2.5px solid var(--gold);color:var(--gold-deep);
+  text-align:center;padding:0 6px;font-weight:500}
+.blank.ok{border-color:var(--green);color:var(--green)}
+.blank.no{border-color:var(--clay);color:var(--clay)}
+.opts{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.opt{min-height:54px;border-radius:var(--r-lg);border:1px solid var(--line);background:var(--card);
+  font-family:var(--serif);font-size:19px;color:var(--ink);cursor:pointer;padding:10px 16px;transition:transform .06s}
+.opt:active{transform:scale(.98)}
+.opt.ok{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.opt.no{background:var(--clay-soft);border-color:var(--clay);color:var(--clay);animation:shake .3s}
+.opt:disabled{cursor:default}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.fb{font-size:13px;margin:0 4px 12px;min-height:18px;font-weight:500}
+.fb.ok{color:var(--green)} .fb.no{color:var(--clay)}
+
+.slots{min-height:64px;border:1.5px dashed var(--indigo-200);border-radius:var(--r-lg);
+  background:var(--indigo-50);padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;margin:4px 0 16px}
+.slots.ok{border-color:var(--green);background:var(--green-soft)}
+.slots.no{border-color:var(--clay);background:var(--clay-soft)}
+.tilebank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.tile{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 14px;
+  font-family:var(--serif);font-size:18px;color:var(--ink);cursor:pointer;user-select:none;
+  -webkit-user-select:none;transition:transform .06s;min-height:46px}
+.tile:active{transform:scale(.95)}
+.tile.used{opacity:.25;pointer-events:none}
+.slots .tile{background:var(--card);border-color:var(--indigo-200)}
+
+.sumwrap{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:0 8px}
+.sum-score{font-family:var(--serif);font-size:54px;font-weight:600;color:var(--indigo-800);margin:0}
+.sum-t{font-family:var(--serif);font-size:23px;font-weight:500;margin:6px 0 4px}
+.sum-d{font-size:14px;color:var(--ink-soft);margin:0 0 18px}
+.dots{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
+.dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.dot.g{background:var(--green-soft);color:var(--green)}
+.dot.m{background:var(--clay-soft);color:var(--clay)}
+
+@media (min-width:480px){ #app{box-shadow:0 0 0 1px var(--line)} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important;animation:none!important} }
+</style>
+</head>
+<body>
+<div id="app" role="application" aria-label="Yoruba learning app"></div>
+
+<script src="words.js"></script>
+<script>
+"use strict";
+// ---------- state & storage ----------
+const KEY = "koyoruba_v1";
+function loadP(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {rounds:{},streak:0,lastDay:""}; }catch(e){ return {rounds:{},streak:0,lastDay:""}; } }
+function saveP(){ localStorage.setItem(KEY, JSON.stringify(P)); }
+let P = loadP();
+
+function rp(id){ if(!P.rounds[id]) P.rounds[id] = {fc:{},ch:{},bd:{}}; return P.rounds[id]; }
+function modePct(id, mode){
+  const r = ROUNDS.find(x=>x.id===id); if(!r) return 0;
+  const m = rp(id)[mode]; let ok=0;
+  for(let i=0;i<r.words.length;i++) if(m[i]===true || m[i]==="got") ok++;
+  return Math.round(ok / r.words.length * 100);
+}
+function fcDone(id){
+  const r = ROUNDS.find(x=>x.id===id);
+  const m = rp(id).fc;
+  for(let i=0;i<r.words.length;i++) if(!(i in m)) return false;
+  return true;
+}
+function unlocked(idx){ return idx===0 || fcDone(ROUNDS[idx-1].id); }
+function roundDone(id){ return modePct(id,"fc")===100 && modePct(id,"ch")===100 && modePct(id,"bd")===100; }
+function wordsLearned(){
+  let n=0;
+  ROUNDS.forEach(r=>{ const m=rp(r.id).fc; r.words.forEach((w,i)=>{ if(m[i]==="got") n++; }); });
+  return n;
+}
+function bumpStreak(){
+  const today = new Date().toISOString().slice(0,10);
+  if(P.lastDay===today) return;
+  const y = new Date(Date.now()-864e5).toISOString().slice(0,10);
+  P.streak = (P.lastDay===y) ? P.streak+1 : 1;
+  P.lastDay = today; saveP();
+}
+function pool(){ // all words from unlocked rounds
+  const out=[];
+  ROUNDS.forEach((r,idx)=>{ if(unlocked(idx)) r.words.forEach((w,i)=>out.push({...w, rid:r.id, wi:i})); });
+  return out;
+}
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+const I = {
+  back:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  cards:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="13" height="15" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v13"/></svg>',
+  target:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>',
+  blocks:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/><rect x="8" y="3" width="8" height="8" rx="1.5"/></svg>',
+  mix:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h4l10 10h4"/><path d="M18 4l3 3-3 3"/><path d="M3 17h4l2.5-2.5"/><path d="M14.5 9.5L17 7h4"/><path d="M18 20l3-3-3-3"/></svg>',
+  lock:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'
+};
+
+const app = document.getElementById("app");
+let S = {}; // current session
+
+// ---------- home ----------
+function home(){
+  const learned = wordsLearned();
+  let rows = "";
+  ROUNDS.forEach((r,idx)=>{
+    const open = unlocked(idx);
+    if(!open){
+      rows += `<div class="round locked"><div class="top">
+        <span class="num">${I.lock}</span>
+        <div><p class="t">${esc(r.title)}</p><p class="d">Unlocks after round ${ROUNDS[idx-1].id}</p></div>
+        <span class="badge lock">Locked</span></div></div>`;
+      return;
+    }
+    const f=modePct(r.id,"fc"), c=modePct(r.id,"ch"), b=modePct(r.id,"bd");
+    const done = roundDone(r.id);
+    const started = f>0||c>0||b>0;
+    const badge = done ? '<span class="badge done">Done</span>' : (started||idx===0 ? '<span class="badge now">Study</span>' : '<span class="badge now">New</span>');
+    rows += `<button class="round" onclick="openRound(${r.id})"><div class="top">
+      <span class="num">${r.id}</span>
+      <div><p class="t">${esc(r.title)}</p><p class="d">${r.words.length} words</p></div>${badge}</div>
+      <div class="weave" aria-hidden="true">
+        <i class="${f===100?'full':''}"><b style="width:${f}%"></b></i>
+        <i class="${c===100?'full':''}"><b style="width:${c}%"></b></i>
+        <i class="${b===100?'full':''}"><b style="width:${b}%"></b></i>
+      </div>
+      <div class="weave-key"><span>cards ${f}%</span><span>challenge ${c}%</span><span>build ${b}%</span></div>
+    </button>`;
+  });
+  const mixOn = ROUNDS.length>1 && unlocked(1);
+  app.innerHTML = `
+  <header class="hero">
+    <p class="kicker">Kọ́ Yorùbá</p>
+    <h1>Ẹ káàbọ̀<br>Welcome back</h1>
+    <p class="sub">Ten words at a time, woven together.</p>
+    <div class="statrow">
+      <div class="stat"><div class="n">${learned}</div><div class="l">words learned</div></div>
+      <div class="stat"><div class="n">${P.streak||0}</div><div class="l">day streak</div></div>
+      <div class="stat"><div class="n">${ROUNDS.length}</div><div class="l">rounds available</div></div>
+    </div>
+  </header>
+  <main class="main">
+    <p class="section-label">Your rounds</p>
+    ${rows}
+    <button class="mix" ${mixOn?"":"disabled"} onclick="openRound('mix')">
+      <div><p class="t">Mix mode</p><p class="d">${mixOn?"Everything you've unlocked, shuffled together":"Unlock round 2 to mix"}</p></div>
+      ${I.mix}
+    </button>
+  </main>`;
+  window.scrollTo(0,0);
+}
+
+// ---------- round screen ----------
+function openRound(id){
+  if(id==="mix"){
+    const n = pool().length;
+    app.innerHTML = `
+    <div class="topbar"><button class="back" onclick="home()" aria-label="Back">${I.back}</button><span class="where">Home</span></div>
+    <div class="roundhead"><h2>Mix mode</h2><p>${n} words from every unlocked round, shuffled.</p></div>
+    <main class="main">
+      ${modeBtn("mix","fc","Flashcards","Flip and rate yourself","fc",I.cards,null)}
+      ${modeBtn("mix","ch","Challenge","Fill the blank in a sentence","ch",I.target,null)}
+      ${modeBtn("mix","bd","Build it","Tap tiles to build the sentence","bd",I.blocks,null)}
+    </main>`;
+    window.scrollTo(0,0);
+    return;
+  }
+  const r = ROUNDS.find(x=>x.id===id);
+  app.innerHTML = `
+  <div class="topbar"><button class="back" onclick="home()" aria-label="Back">${I.back}</button><span class="where">Home</span></div>
+  <div class="roundhead"><h2>Round ${r.id} · ${esc(r.title)}</h2><p>Start with flashcards, then test yourself two ways.</p></div>
+  <main class="main">
+    ${modeBtn(id,"fc","Flashcards","Flip and rate yourself","fc",I.cards,modePct(id,"fc"))}
+    ${modeBtn(id,"ch","Challenge","Fill the blank in a sentence","ch",I.target,modePct(id,"ch"))}
+    ${modeBtn(id,"bd","Build it","Tap tiles to build the sentence","bd",I.blocks,modePct(id,"bd"))}
+  </main>`;
+  window.scrollTo(0,0);
+}
+function modeBtn(id,mode,t,d,cls,icon,pct){
+  const idArg = id==="mix" ? "'mix'" : id;
+  return `<button class="mode" onclick="startSession(${idArg},'${mode}')">
+    <span class="ic ${cls}">${icon}</span>
+    <div><p class="t">${t}</p><p class="d">${d}</p></div>
+    ${pct===null?"":`<span class="pct">${pct}%</span>`}
+  </button>`;
+}
+
+// ---------- sessions ----------
+function startSession(id, mode){
+  let words;
+  if(id==="mix"){ words = shuffle(pool()).slice(0,10); }
+  else{
+    const r = ROUNDS.find(x=>x.id===id);
+    words = shuffle(r.words.map((w,i)=>({...w, rid:id, wi:i})));
+  }
+  S = { id, mode, words, i:0, results:[], flip:false, answered:false, slots:[], bank:[] };
+  step();
+}
+function header(){
+  const pct = Math.round(S.i / S.words.length * 100);
+  const back = S.id==="mix" ? "openRound('mix')" : `openRound(${S.id})`;
+  return `<div class="topbar"><button class="back" onclick="${back}" aria-label="Exit session">${I.back}</button>
+    <span class="where">${S.mode==="fc"?"Flashcards":S.mode==="ch"?"Challenge":"Build it"}</span></div>
+    <div class="prog"><b style="width:${pct}%"></b></div>
+    <p class="count">${Math.min(S.i+1,S.words.length)} of ${S.words.length}</p>`;
+}
+function step(){
+  if(S.i >= S.words.length){ return summary(); }
+  if(S.mode==="fc") renderFC();
+  else if(S.mode==="ch") renderCH();
+  else renderBD();
+  window.scrollTo(0,0);
+}
+
+// flashcards
+function renderFC(){
+  const w = S.words[S.i];
+  app.innerHTML = header() + `
+  <main class="session">
+    <div class="fcard ${S.flip?'flip':''}" onclick="flipFC()" role="button" aria-label="Flashcard, tap to flip">
+      <div class="in">
+        <div class="face f">
+          <p class="tag">Yorùbá</p>
+          <p class="yo-word">${esc(w.yo)}</p>
+          <p class="yo-simple">${esc(w.simple)}</p>
+          <p class="yo-pron">${esc(w.pron)}</p>
+          <p class="hint">Tap to reveal</p>
+        </div>
+        <div class="face b">
+          <p class="tag">English</p>
+          <p class="en-word">${esc(w.en)}</p>
+          <div class="ex"><p class="y">${esc(w.ex.yo)}</p><p class="e">${esc(w.ex.en)}</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn miss" ${S.flip?"":"disabled"} onclick="rateFC('miss')">Still learning</button>
+      <button class="btn got" ${S.flip?"":"disabled"} onclick="rateFC('got')">Got it</button>
+    </div>
+  </main>`;
+}
+function flipFC(){ S.flip=!S.flip; renderFC(); }
+function rateFC(v){
+  const w=S.words[S.i];
+  rp(w.rid).fc[w.wi]=v; saveP();
+  S.results.push(v==="got"); S.i++; S.flip=false; step();
+}
+
+// challenge
+function renderCH(){
+  const w = S.words[S.i];
+  if(!S.answered && !S.opts){
+    const others = shuffle(pool().filter(x=>x.yo!==w.yo)).slice(0,3).map(x=>x.yo);
+    S.opts = shuffle([w.yo, ...others]);
+  }
+  const blanked = esc(w.ex.yo).replace(esc(w.yo), `<span class="blank ${S.answered?(S.correct?'ok':'no'):''}" id="blank">${S.answered?esc(w.yo):"&nbsp;"}</span>`);
+  app.innerHTML = header() + `
+  <main class="session">
+    <p class="q-en">${esc(w.ex.en)}</p>
+    <p class="q-yo">${blanked}</p>
+    <div class="opts">${S.opts.map((o,j)=>{
+      let cls=""; if(S.answered){ if(o===w.yo) cls="ok"; else if(j===S.picked && !S.correct) cls="no"; }
+      return `<button class="opt ${cls}" ${S.answered?"disabled":""} onclick="pickCH(${j})">${esc(o)}</button>`;
+    }).join("")}</div>
+    <p class="fb ${S.answered?(S.correct?'ok':'no'):''}">${S.answered?(S.correct?"Bẹ́ẹ̀ ni — correct!":"Not quite — the answer is highlighted"):""}</p>
+    <div class="actions"><button class="btn primary" ${S.answered?"":"disabled"} onclick="nextCH()">Next</button></div>
+  </main>`;
+}
+function pickCH(j){
+  const w=S.words[S.i];
+  S.picked=j; S.correct = S.opts[j]===w.yo; S.answered=true;
+  rp(w.rid).ch[w.wi]=S.correct; saveP();
+  renderCH();
+}
+function nextCH(){ S.results.push(S.correct); S.i++; S.answered=false; S.opts=null; step(); }
+
+// build it
+function renderBD(){
+  const w = S.words[S.i];
+  if(!S.bank.length && !S.answered){
+    const target = w.ex.yo.split(" ");
+    const otherTokens = pool().filter(x=>x.yo!==w.yo).flatMap(x=>x.ex.yo.split(" ")).filter(t=>!target.includes(t));
+    const extras = shuffle([...new Set(otherTokens)]).slice(0,2);
+    S.bank = shuffle([...target, ...extras]).map((t,k)=>({t,k,used:false}));
+    S.slots = [];
+  }
+  const cls = S.answered ? (S.correct?"ok":"no") : "";
+  app.innerHTML = header() + `
+  <main class="session">
+    <p class="q-en">Build it in Yorùbá:</p>
+    <p class="q-yo" style="font-size:20px">${esc(w.ex.en)}</p>
+    <div class="slots ${cls}" id="slots">${S.slots.map((s,j)=>`<button class="tile" ${S.answered?"disabled":""} onclick="unplace(${j})">${esc(s.t)}</button>`).join("")}</div>
+    <div class="tilebank">${S.bank.map((b,j)=>`<button class="tile ${b.used?'used':''}" ${S.answered?"disabled":""} onclick="place(${j})">${esc(b.t)}</button>`).join("")}</div>
+    <p class="fb ${cls}">${S.answered?(S.correct?"Bẹ́ẹ̀ ni — correct!":"Answer: "+esc(w.ex.yo)):""}</p>
+    <div class="actions">
+      ${S.answered
+        ? `<button class="btn primary" onclick="nextBD()">Next</button>`
+        : `<button class="btn primary" ${S.slots.length?"":"disabled"} onclick="checkBD()">Check</button>`}
+    </div>
+  </main>`;
+}
+function place(j){ if(S.bank[j].used) return; S.bank[j].used=true; S.slots.push(S.bank[j]); renderBD(); }
+function unplace(j){ const s=S.slots.splice(j,1)[0]; S.bank[s.k].used=false; renderBD(); }
+function checkBD(){
+  const w=S.words[S.i];
+  S.correct = S.slots.map(s=>s.t).join(" ") === w.ex.yo;
+  S.answered = true;
+  rp(w.rid).bd[w.wi]=S.correct; saveP();
+  renderBD();
+}
+function nextBD(){ S.results.push(S.correct); S.i++; S.answered=false; S.bank=[]; S.slots=[]; step(); }
+
+// summary
+function summary(){
+  bumpStreak();
+  const ok = S.results.filter(Boolean).length, n = S.results.length;
+  const msg = ok===n ? "Perfect — every single one." : ok>=n*0.7 ? "Strong work. Run it again to lock in the misses." : "Good reps. Repetition is how it sticks.";
+  const back = S.id==="mix" ? "openRound('mix')" : `openRound(${S.id})`;
+  app.innerHTML = `
+  <div class="topbar"><button class="back" onclick="${back}" aria-label="Back">${I.back}</button><span class="where">Session complete</span></div>
+  <main class="session"><div class="sumwrap">
+    <p class="sum-score">${ok}<span style="font-size:26px;color:var(--ink-faint)">/${n}</span></p>
+    <p class="sum-t">${ok===n?"Ó dára púpọ̀!":"Ẹ kú iṣẹ́!"}</p>
+    <p class="sum-d">${msg}</p>
+    <div class="dots">${S.results.map(r=>`<span class="dot ${r?'g':'m'}">${r?"✓":"✕"}</span>`).join("")}</div>
+    <div class="actions" style="flex-direction:column">
+      <button class="btn primary" onclick="startSession(${S.id==="mix"?"'mix'":S.id},'${S.mode}')">Practice again</button>
+      <button class="btn" onclick="${back}">Back to round</button>
+      <button class="btn" onclick="home()">Home</button>
+    </div>
+  </div></main>`;
+  window.scrollTo(0,0);
+}
+
+home();
+</script>
+</body>
+</html>
