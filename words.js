@@ -168,5 +168,82 @@ const ROUNDS = [
         ex: { yo: "Ìka ọwọ́ mẹ́wàá ni mo ní", en: "I have ten fingers" }
       }
     ]
+  },
+  {
+    id: 3,
+    title: "Everyday verbs",
+    icon: "bolt",
+    words: [
+      {
+        yo: "fẹ́",
+        simple: "fe",
+        pron: "feh (high tone)",
+        en: "to want",
+        ex: { yo: "Mo fẹ́ omi", en: "I want water" }
+      },
+      {
+        yo: "jẹ",
+        simple: "je",
+        pron: "jeh (mid tone)",
+        en: "to eat",
+        ex: { yo: "Mo fẹ́ jẹ oúnjẹ", en: "I want to eat food" }
+      },
+      {
+        yo: "mu",
+        simple: "mu",
+        pron: "moo (mid tone)",
+        en: "to drink",
+        ex: { yo: "Mo mu omi lójoojúmọ̀", en: "I drink water every day" }
+      },
+      {
+        yo: "lọ",
+        simple: "lo",
+        pron: "law (mid tone)",
+        en: "to go",
+        ex: { yo: "Mo fẹ́ lọ ilé", en: "I want to go home" }
+      },
+      {
+        yo: "wá",
+        simple: "wa",
+        pron: "wah (high tone)",
+        en: "to come",
+        ex: { yo: "Ẹ wá síbí", en: "Come here" }
+      },
+      {
+        yo: "gbọ́",
+        simple: "gbo",
+        pron: "gbaw (high tone)",
+        en: "to hear / understand",
+        ex: { yo: "Mo gbọ́ ọ dáadáa", en: "I understand you well" }
+      },
+      {
+        yo: "fẹ́ràn",
+        simple: "feran",
+        pron: "FEH-rahn",
+        en: "to like / love",
+        ex: { yo: "Mo fẹ́ràn èdè Yorùbá", en: "I like the Yoruba language" }
+      },
+      {
+        yo: "ní",
+        simple: "ni",
+        pron: "nee (high tone)",
+        en: "to have",
+        ex: { yo: "Mo ní ìdílé nlá", en: "I have a big family" }
+      },
+      {
+        yo: "sọ",
+        simple: "so",
+        pron: "shaw (mid tone)",
+        en: "to say / speak",
+        ex: { yo: "Mo sọ Yorùbá díẹ̀", en: "I speak a little Yoruba" }
+      },
+      {
+        yo: "rí",
+        simple: "ri",
+        pron: "ree (high tone)",
+        en: "to see",
+        ex: { yo: "Mo rí rẹ lánàá", en: "I saw you yesterday" }
+      }
+    ]
   }
 ];
