@@ -78,6 +78,18 @@ body{font-family:var(--sans);color:var(--ink);touch-action:manipulation;
 .mix svg{margin-left:auto;flex:none}
 .mix:disabled{opacity:.45;cursor:default}
 
+.forge-btn{width:100%;background:var(--card);border:1.5px solid var(--gold);border-radius:var(--r-lg);
+  padding:15px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-top:10px;
+  font-family:var(--sans);text-align:left;transition:transform .06s}
+.forge-btn:active{transform:scale(.985)}
+.forge-btn .forge-ic{width:38px;height:38px;border-radius:10px;background:var(--gold-soft);
+  color:var(--gold-deep);display:flex;align-items:center;justify-content:center;flex:none}
+.forge-btn .t{font-size:15px;font-weight:600;margin:0;color:var(--ink)}
+.forge-btn .d{font-size:12px;color:var(--ink-soft);margin:1px 0 0}
+.forge-btn .chev{margin-left:auto;flex:none;color:var(--gold-deep)}
+.forge-btn:disabled{opacity:.6;border-style:dashed;cursor:default}
+.forge-btn:disabled .forge-ic{background:var(--indigo-50);color:var(--ink-faint)}
+
 .topbar{display:flex;align-items:center;gap:8px;padding:calc(12px + env(safe-area-inset-top)) 12px 12px}
 .back{border:none;background:transparent;padding:10px;cursor:pointer;border-radius:10px;color:var(--ink);display:flex}
 .back:active{background:var(--indigo-50)}
@@ -104,19 +116,22 @@ body{font-family:var(--sans);color:var(--ink);touch-action:manipulation;
 .prog b{display:block;height:100%;background:var(--gold);border-radius:3px;transition:width .25s}
 .count{font-size:12px;color:var(--ink-faint);text-align:right;margin:0 6px 12px}
 
-.fcard{flex:1;min-height:300px;perspective:1100px;cursor:pointer;margin-bottom:14px}
+/* FLASHCARD — fixed responsive height so the card always fully wraps its
+   content on iOS Safari (previously flex:1 let the white face collapse). */
+.fcard{height:clamp(330px,54vh,470px);perspective:1100px;cursor:pointer;margin:0 0 14px;flex:none}
 .fcard .in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .45s}
 .fcard.flip .in{transform:rotateY(180deg)}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
   background:var(--card);border:1px solid var(--line);border-radius:22px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px;text-align:center}
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:26px;text-align:center;overflow-wrap:break-word}
 .face.b{transform:rotateY(180deg);background:var(--indigo-900);border-color:var(--indigo-900);color:#fff}
 .tag{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;color:var(--gold-deep);margin-bottom:14px}
 .face.b .tag{color:var(--gold)}
-.yo-word{font-family:var(--serif);font-size:40px;font-weight:500;line-height:1.15;margin:0}
+.yo-word{font-family:var(--serif);font-size:clamp(30px,8.2vw,42px);font-weight:500;line-height:1.15;margin:0;max-width:100%;overflow-wrap:break-word}
 .yo-simple{font-size:14px;color:var(--ink-soft);margin:8px 0 0}
 .yo-pron{font-size:14px;color:var(--ink-faint);margin:4px 0 0;font-style:italic}
-.en-word{font-family:var(--serif);font-size:30px;font-weight:500;margin:0}
+.en-word{font-family:var(--serif);font-size:clamp(26px,7vw,32px);font-weight:500;margin:0;max-width:100%;overflow-wrap:break-word}
 .ex{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.18);max-width:280px}
 .ex .y{font-size:16px;margin:0;color:var(--gold-soft)}
 .ex .e{font-size:13px;color:var(--indigo-200);margin:5px 0 0}
@@ -162,6 +177,17 @@ body{font-family:var(--sans);color:var(--ink);touch-action:manipulation;
 .tile.used{opacity:.25;pointer-events:none}
 .slots .tile{background:var(--card);border-color:var(--indigo-200)}
 
+/* FORGE */
+.forge-lead{font-size:13px;color:var(--ink-soft);margin:10px 4px 0;text-align:center}
+.forge-prompt{font-family:var(--serif);font-size:clamp(26px,7.6vw,34px);font-weight:500;
+  line-height:1.25;text-align:center;color:var(--ink);margin:14px 8px 16px;overflow-wrap:break-word}
+.forge-hintbox{background:var(--indigo-50);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:16px;text-align:center;color:var(--ink-soft);font-size:14px;line-height:1.5}
+.forge-answer{background:var(--indigo-900);border-radius:22px;padding:24px 20px;text-align:center;color:#fff}
+.forge-yo{font-family:var(--serif);font-size:clamp(26px,7.6vw,34px);font-weight:500;
+  line-height:1.25;margin:6px 0 0;overflow-wrap:break-word}
+.forge-simple{font-size:14px;color:var(--indigo-200);margin:8px 0 0;font-style:italic}
+
 .sumwrap{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:0 8px}
 .sum-score{font-family:var(--serif);font-size:54px;font-weight:600;color:var(--indigo-800);margin:0}
 .sum-t{font-family:var(--serif);font-size:23px;font-weight:500;margin:6px 0 4px}
@@ -183,7 +209,7 @@ body{font-family:var(--sans);color:var(--ink);touch-action:manipulation;
 "use strict";
 // ---------- state & storage ----------
 const KEY = "koyoruba_v1";
-function loadP(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {rounds:{},streak:0,lastDay:""}; }catch(e){ return {rounds:{},streak:0,lastDay:""}; } }
+function loadP(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {rounds:{},streak:0,lastDay:"",forged:0}; }catch(e){ return {rounds:{},streak:0,lastDay:"",forged:0}; } }
 function saveP(){ localStorage.setItem(KEY, JSON.stringify(P)); }
 let P = loadP();
 
@@ -221,6 +247,85 @@ function pool(){ // all words from unlocked rounds
 }
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+// strip tone marks / sub-dots to a plain romanization (for the Forge reveal)
+function plain(s){ return s.normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+
+// ---------- Forge: a word is "known" if mastered in flashcards OR
+//            answered correctly at least once in Challenge or Build ----------
+function isKnown(w){ const r = rp(w.rid); return r.fc[w.wi]==="got" || r.ch[w.wi]===true || r.bd[w.wi]===true; }
+function knownSet(){ return new Set(pool().filter(isKnown).map(w=>w.simple)); }
+function wordByKey(k){ for(const r of ROUNDS){ for(const w of r.words){ if(w.simple===k) return w; } } return null; }
+
+// Sentence frames. Each is curated to produce grammatically correct Yoruba.
+// Slots pull from words the learner already knows; as the vocabulary grows,
+// the number of unique sentences grows combinatorially.
+const FORGE_FRAMES = [
+  { // I {see/love} {family member}
+    requires: [],
+    slots: {
+      verb: [ {key:"ri",en:"see"}, {key:"feran",en:"love"} ],
+      obj:  [ {key:"baba",enPhrase:"my father"}, {key:"mama",enPhrase:"my mother"},
+              {key:"omo",enPhrase:"my child"}, {key:"egbon",enPhrase:"my older sibling"},
+              {key:"aburo",enPhrase:"my younger sibling"}, {key:"oko",enPhrase:"my husband"},
+              {key:"iyawo",enPhrase:"my wife"}, {key:"ore",enPhrase:"my friend"} ]
+    },
+    build: s => ({ en:`I ${s.verb.en} ${s.obj.enPhrase}`, yo:`Mo ${s.verb.yo} ${s.obj.yo}` })
+  },
+  { // I have {a child / an older sibling / a younger sibling / a friend}
+    requires: ["ni"],
+    slots: {
+      obj: [ {key:"omo",enNoun:"a child"}, {key:"egbon",enNoun:"an older sibling"},
+             {key:"aburo",enNoun:"a younger sibling"}, {key:"ore",enNoun:"a friend"} ]
+    },
+    build: s => ({ en:`I have ${s.obj.enNoun}`, yo:`Mo ní ${s.obj.yo}` })
+  },
+  { // I want to {verb}  (serial verb)
+    requires: ["fe"],
+    slots: {
+      v: [ {key:"je",en:"eat"}, {key:"mu",en:"drink"}, {key:"lo",en:"go"},
+           {key:"wa",en:"come"}, {key:"so",en:"speak"} ]
+    },
+    build: s => ({ en:`I want to ${s.v.en}`, yo:`Mo fẹ́ ${s.v.yo}` })
+  },
+  { // I {speak/understand/love} Yoruba
+    requires: [],
+    slots: {
+      v: [ {key:"so",en:"speak"}, {key:"gbo",en:"understand"}, {key:"feran",en:"love"} ]
+    },
+    build: s => ({ en:`I ${s.v.en} Yoruba`, yo:`Mo ${s.v.yo} Yorùbá` })
+  }
+];
+
+function forgeSentences(){
+  const known = knownSet();
+  const out = [];
+  FORGE_FRAMES.forEach(fr=>{
+    if(fr.requires && !fr.requires.every(k=>known.has(k))) return;
+    const slotNames = Object.keys(fr.slots);
+    const opts = {}; let ok = true;
+    slotNames.forEach(sn=>{
+      const avail = fr.slots[sn].filter(o=>known.has(o.key));
+      if(avail.length===0) ok=false;
+      opts[sn]=avail;
+    });
+    if(!ok) return;
+    let combos = [{}];
+    slotNames.forEach(sn=>{
+      const next=[];
+      combos.forEach(c=> opts[sn].forEach(o=> next.push(Object.assign({},c,{[sn]:o})) ));
+      combos = next;
+    });
+    combos.forEach(c=>{
+      const resolved = {};
+      slotNames.forEach(sn=>{
+        const w = wordByKey(c[sn].key);
+        resolved[sn] = Object.assign({}, c[sn], { yo: w ? w.yo : c[sn].key });
+      });
+      out.push(fr.build(resolved));
+    });
+  });
+  return out;
+}
 
 const I = {
   back:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
@@ -228,7 +333,9 @@ const I = {
   target:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>',
   blocks:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/><rect x="8" y="3" width="8" height="8" rx="1.5"/></svg>',
   mix:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h4l10 10h4"/><path d="M18 4l3 3-3 3"/><path d="M3 17h4l2.5-2.5"/><path d="M14.5 9.5L17 7h4"/><path d="M18 20l3-3-3-3"/></svg>',
-  lock:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'
+  lock:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  forge:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 2-2 4-5-1z"/><path d="M13 9l-7 7a2 2 0 0 0 0 3 2 2 0 0 0 3 0l7-7"/><path d="M5 21h6"/></svg>',
+  chev:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'
 };
 
 const app = document.getElementById("app");
@@ -263,6 +370,9 @@ function home(){
     </button>`;
   });
   const mixOn = ROUNDS.length>1 && unlocked(1);
+  const forgeCount = forgeSentences().length;
+  const forgeOn = forgeCount >= 4;
+  const forged = P.forged||0;
   app.innerHTML = `
   <header class="hero">
     <p class="kicker">Kọ́ Yorùbá</p>
@@ -271,15 +381,22 @@ function home(){
     <div class="statrow">
       <div class="stat"><div class="n">${learned}</div><div class="l">words learned</div></div>
       <div class="stat"><div class="n">${P.streak||0}</div><div class="l">day streak</div></div>
-      <div class="stat"><div class="n">${ROUNDS.length}</div><div class="l">rounds available</div></div>
+      <div class="stat"><div class="n">${forged}</div><div class="l">sentences forged</div></div>
     </div>
   </header>
   <main class="main">
     <p class="section-label">Your rounds</p>
     ${rows}
+    <p class="section-label" style="margin-top:20px">Practice everything</p>
     <button class="mix" ${mixOn?"":"disabled"} onclick="openRound('mix')">
-      <div><p class="t">Mix mode</p><p class="d">${mixOn?"Everything you've unlocked, shuffled together":"Unlock round 2 to mix"}</p></div>
+      <div><p class="t">Mix mode</p><p class="d">${mixOn?"Every unlocked round, shuffled together":"Unlock round 2 to mix"}</p></div>
       ${I.mix}
+    </button>
+    <button class="forge-btn" ${forgeOn?"":"disabled"} onclick="startForge()">
+      <span class="forge-ic">${I.forge}</span>
+      <div><p class="t">Forge${forgeOn?"":" · locked"}</p>
+        <p class="d">${forgeOn ? "Speak fresh sentences built from words you know" : "Master your verbs to unlock this"}</p></div>
+      ${forgeOn?`<span class="chev">${I.chev}</span>`:""}
     </button>
   </main>`;
   window.scrollTo(0,0);
@@ -333,9 +450,10 @@ function startSession(id, mode){
 }
 function header(){
   const pct = Math.round(S.i / S.words.length * 100);
-  const back = S.id==="mix" ? "openRound('mix')" : `openRound(${S.id})`;
+  const back = S.id==="mix" ? "openRound('mix')" : S.id==="forge" ? "home()" : `openRound(${S.id})`;
+  const label = S.mode==="fc"?"Flashcards":S.mode==="ch"?"Challenge":S.mode==="bd"?"Build it":"Forge";
   return `<div class="topbar"><button class="back" onclick="${back}" aria-label="Exit session">${I.back}</button>
-    <span class="where">${S.mode==="fc"?"Flashcards":S.mode==="ch"?"Challenge":"Build it"}</span></div>
+    <span class="where">${label}</span></div>
     <div class="prog"><b style="width:${pct}%"></b></div>
     <p class="count">${Math.min(S.i+1,S.words.length)} of ${S.words.length}</p>`;
 }
@@ -343,7 +461,8 @@ function step(){
   if(S.i >= S.words.length){ return summary(); }
   if(S.mode==="fc") renderFC();
   else if(S.mode==="ch") renderCH();
-  else renderBD();
+  else if(S.mode==="bd") renderBD();
+  else renderForge();
   window.scrollTo(0,0);
 }
 
@@ -368,7 +487,7 @@ function renderFC(){
         </div>
       </div>
     </div>
-    <div class="actions">
+    <div class="actions" style="margin-top:auto">
       <button class="btn miss" ${S.flip?"":"disabled"} onclick="rateFC('miss')">Still learning</button>
       <button class="btn got" ${S.flip?"":"disabled"} onclick="rateFC('got')">Got it</button>
     </div>
@@ -398,7 +517,7 @@ function renderCH(){
       return `<button class="opt ${cls}" ${S.answered?"disabled":""} onclick="pickCH(${j})">${esc(o)}</button>`;
     }).join("")}</div>
     <p class="fb ${S.answered?(S.correct?'ok':'no'):''}">${S.answered?(S.correct?"Bẹ́ẹ̀ ni — correct!":"Not quite — the answer is highlighted"):""}</p>
-    <div class="actions"><button class="btn primary" ${S.answered?"":"disabled"} onclick="nextCH()">Next</button></div>
+    <div class="actions" style="margin-top:auto"><button class="btn primary" ${S.answered?"":"disabled"} onclick="nextCH()">Next</button></div>
   </main>`;
 }
 function pickCH(j){
@@ -427,7 +546,7 @@ function renderBD(){
     <div class="slots ${cls}" id="slots">${S.slots.map((s,j)=>`<button class="tile" ${S.answered?"disabled":""} onclick="unplace(${j})">${esc(s.t)}</button>`).join("")}</div>
     <div class="tilebank">${S.bank.map((b,j)=>`<button class="tile ${b.used?'used':''}" ${S.answered?"disabled":""} onclick="place(${j})">${esc(b.t)}</button>`).join("")}</div>
     <p class="fb ${cls}">${S.answered?(S.correct?"Bẹ́ẹ̀ ni — correct!":"Answer: "+esc(w.ex.yo)):""}</p>
-    <div class="actions">
+    <div class="actions" style="margin-top:auto">
       ${S.answered
         ? `<button class="btn primary" onclick="nextBD()">Next</button>`
         : `<button class="btn primary" ${S.slots.length?"":"disabled"} onclick="checkBD()">Check</button>`}
@@ -445,12 +564,54 @@ function checkBD(){
 }
 function nextBD(){ S.results.push(S.correct); S.i++; S.answered=false; S.bank=[]; S.slots=[]; step(); }
 
+// ---------- forge ----------
+function startForge(){
+  const all = shuffle(forgeSentences());
+  if(all.length < 4){ home(); return; }
+  const items = all.slice(0, Math.min(10, all.length));
+  S = { id:"forge", mode:"forge", words: items, i:0, results:[], revealed:false };
+  step();
+}
+function renderForge(){
+  const it = S.words[S.i];
+  app.innerHTML = header() + `
+  <main class="session">
+    <p class="forge-lead">Say this in Yorùbá, out loud — then check.</p>
+    <p class="forge-prompt">${esc(it.en)}</p>
+    ${S.revealed ? `
+      <div class="forge-answer">
+        <p class="tag" style="text-align:center">Yorùbá</p>
+        <p class="forge-yo">${esc(it.yo)}</p>
+        <p class="forge-simple">${esc(plain(it.yo))}</p>
+      </div>
+      <div class="actions" style="margin-top:auto">
+        <button class="btn miss" onclick="rateForge(false)">Missed it</button>
+        <button class="btn got" onclick="rateForge(true)">Said it right</button>
+      </div>`
+    : `
+      <div class="forge-hintbox">Picture the words you know, then speak the whole sentence aloud before revealing.</div>
+      <div class="actions" style="margin-top:auto">
+        <button class="btn primary" onclick="revealForge()">Reveal answer</button>
+      </div>`}
+  </main>`;
+}
+function revealForge(){ S.revealed=true; renderForge(); }
+function rateForge(ok){
+  S.results.push(ok);
+  if(ok){ P.forged=(P.forged||0)+1; saveP(); }
+  S.i++; S.revealed=false; step();
+}
+
 // summary
 function summary(){
   bumpStreak();
   const ok = S.results.filter(Boolean).length, n = S.results.length;
-  const msg = ok===n ? "Perfect — every single one." : ok>=n*0.7 ? "Strong work. Run it again to lock in the misses." : "Good reps. Repetition is how it sticks.";
-  const back = S.id==="mix" ? "openRound('mix')" : `openRound(${S.id})`;
+  const forge = S.mode==="forge";
+  const msg = forge
+    ? (ok===n ? "Every sentence, spoken correctly. That's real production." : ok>=n*0.7 ? "Strong — these are sentences you generated, not memorised." : "Good reps. Producing beats recognising every time.")
+    : (ok===n ? "Perfect — every single one." : ok>=n*0.7 ? "Strong work. Run it again to lock in the misses." : "Good reps. Repetition is how it sticks.");
+  const back = S.id==="mix" ? "openRound('mix')" : S.id==="forge" ? "home()" : `openRound(${S.id})`;
+  const again = forge ? "startForge()" : `startSession(${S.id==="mix"?"'mix'":S.id},'${S.mode}')`;
   app.innerHTML = `
   <div class="topbar"><button class="back" onclick="${back}" aria-label="Back">${I.back}</button><span class="where">Session complete</span></div>
   <main class="session"><div class="sumwrap">
@@ -459,9 +620,9 @@ function summary(){
     <p class="sum-d">${msg}</p>
     <div class="dots">${S.results.map(r=>`<span class="dot ${r?'g':'m'}">${r?"✓":"✕"}</span>`).join("")}</div>
     <div class="actions" style="flex-direction:column">
-      <button class="btn primary" onclick="startSession(${S.id==="mix"?"'mix'":S.id},'${S.mode}')">Practice again</button>
-      <button class="btn" onclick="${back}">Back to round</button>
-      <button class="btn" onclick="home()">Home</button>
+      <button class="btn primary" onclick="${again}">${forge?"Forge more":"Practice again"}</button>
+      <button class="btn" onclick="${back}">${forge?"Back home":"Back to round"}</button>
+      ${forge?"":'<button class="btn" onclick="home()">Home</button>'}
     </div>
   </div></main>`;
   window.scrollTo(0,0);
